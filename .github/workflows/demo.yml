@@ -37,6 +37,26 @@ jobs:
           done
           xvfb-run -a python scripts/nchu_scenario.py data/nchu/morning_synthetic.csv --out results/nchu/gui --gui
           diff results/nchu/morning/summary.json results/nchu/gui/summary.json
+      - name: Verify NCHU Gymnasium interface and transition timing
+        run: python -m unittest discover -s tests
+      - name: Evaluate paired NCHU baselines
+        run: |
+          python scripts/nchu_baselines.py --seeds 42 43
+          python - <<'PYTHON'
+          import csv
+          from pathlib import Path
+          with Path("results/phase5/baselines.csv").open() as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 12
+          for row in rows:
+              for key in ("unfinished_vehicles", "unfinished_pedestrians", "collisions", "vehicle_teleports"):
+                  assert int(row[key]) == 0, row
+              assert row["pedestrian_teleports"] in ("", "0"), row
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nchu-phase5-baselines
+          path: results/phase5/baselines.csv
       - uses: actions/upload-artifact@v4
         with:
           name: nchu-gate-scenarios
