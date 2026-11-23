@@ -1,0 +1,30 @@
+{
+  "training_seeds": [11, 22, 33],
+  "validation_traffic_seeds": [101, 102],
+  "scenarios": ["offpeak_synthetic.csv", "morning_synthetic.csv", "evening_synthetic.csv"],
+  "episodes": 30,
+  "checkpoint_episode": 15,
+  "DQN": {
+    "learning_rate": 0.0005,
+    "gamma": 0.98,
+    "buffer_size": 20000,
+    "learning_starts": 540,
+    "batch_size": 64,
+    "train_freq": 4,
+    "gradient_steps": 1,
+    "target_update_interval": 540,
+    "exploration_fraction": 0.55,
+    "exploration_final_eps": 0.05
+  },
+  "PPO": {
+    "learning_rate": 0.0003,
+    "gamma": 0.98,
+    "n_steps": 180,
+    "batch_size": 60,
+    "n_epochs": 5,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2
+  },
+  "ppo_lr_pilot": 0.0001,
+  "ppo_pedestrian_weight": 0.25
+}

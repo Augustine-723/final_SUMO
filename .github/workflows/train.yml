@@ -1,0 +1,71 @@
+name: NCHU Phase 6 training
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/train.yml'
+      - 'scripts/nchu_train.py'
+      - 'scripts/nchu_training_report.py'
+      - 'configs/phase6.json'
+      - 'requirements-training.txt'
+permissions:
+  contents: read
+env:
+  SUMO_HOME: /usr/share/sumo
+  MPLBACKEND: Agg
+jobs:
+  train:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        algorithm: [DQN, PPO]
+        seed: [11, 22, 33]
+        variant: [core]
+        include:
+          - {algorithm: PPO, seed: 11, variant: low_lr}
+          - {algorithm: PPO, seed: 11, variant: pedestrian}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU training dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends sumo
+          pip install 'torch==2.5.1' --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-training.txt
+      - name: Train and reload for paired validation
+        run: python scripts/nchu_train.py ${{ matrix.algorithm }} --seed ${{ matrix.seed }} --variant ${{ matrix.variant }} --out results/run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: policy-${{ matrix.algorithm }}-${{ matrix.variant }}-${{ matrix.seed }}
+          path: results/run/
+          if-no-files-found: error
+  report:
+    needs: train
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: policy-*
+          path: results/phase6
+      - name: Replay baselines and verify every pairing
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends sumo
+          pip install -r requirements.txt matplotlib==3.9.4
+          python scripts/nchu_baselines.py --seeds 101 102 --out results/phase6/baselines.csv
+          python scripts/nchu_training_report.py results/phase6
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nchu-phase6-models-and-results
+          path: results/phase6/
+          if-no-files-found: error
