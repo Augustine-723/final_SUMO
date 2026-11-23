@@ -1,0 +1,34 @@
+name: Phase 1 SUMO smoke test
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  demo:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SUMO_HOME: /usr/share/sumo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install simulator and Python interface
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends sumo sumo-tools xvfb xauth
+          python -m pip install -r requirements.txt
+          python -m pip check
+      - name: Check versions
+        run: xvfb-run -a python scripts/check_environment.py
+      - name: Run headless and graphical TraCI simulations
+        run: |
+          python scripts/demo.py
+          xvfb-run -a python scripts/demo.py --gui --output results/demo-gui.csv
+          diff results/demo.csv results/demo-gui.csv
+      - name: Exercise Gymnasium reset and step
+        run: python scripts/smoke_rl.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-demo-traces
+          path: results/*.csv

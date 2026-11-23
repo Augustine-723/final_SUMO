@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<connections>
+  <connection from="NJ" to="JS" fromLane="0" toLane="0" />
+  <connection from="SJ" to="JN" fromLane="0" toLane="0" />
+  <connection from="EJ" to="JW" fromLane="0" toLane="0" />
+  <connection from="WJ" to="JE" fromLane="0" toLane="0" />
+</connections>

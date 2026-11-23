@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+results/
+sumo/demo/junction.net.xml
+*.zip
+*.pt

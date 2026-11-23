@@ -1,0 +1,6 @@
+sumo-rl==1.4.5
+gymnasium==0.29.1
+pettingzoo==1.24.3
+traci==1.18.0
+sumolib==1.18.0
+numpy==1.26.4

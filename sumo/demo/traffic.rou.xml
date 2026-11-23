@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<routes>
+  <route id="N" edges="NJ JS" />
+  <route id="S" edges="SJ JN" />
+  <route id="E" edges="EJ JW" />
+  <route id="W" edges="WJ JE" />
+  <flow id="flowN" route="N" begin="0" end="240" period="6" />
+  <flow id="flowS" route="S" begin="0" end="240" period="6" />
+  <flow id="flowE" route="E" begin="0" end="240" period="8" />
+  <flow id="flowW" route="W" begin="0" end="240" period="8" />
+</routes>
