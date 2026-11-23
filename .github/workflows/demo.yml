@@ -28,6 +28,22 @@ jobs:
           diff results/demo.csv results/demo-gui.csv
       - name: Exercise Gymnasium reset and step
         run: python scripts/smoke_rl.py
+      - name: Rebuild NCHU demand and exercise the real-geometry intersection
+        run: |
+          python scripts/nchu_demand.py results/nchu-inputs
+          for scenario in offpeak morning evening; do
+            cmp data/nchu/${scenario}_synthetic.csv results/nchu-inputs/${scenario}_synthetic.csv
+            python scripts/nchu_scenario.py data/nchu/${scenario}_synthetic.csv --out results/nchu/$scenario
+          done
+          xvfb-run -a python scripts/nchu_scenario.py data/nchu/morning_synthetic.csv --out results/nchu/gui --gui
+          diff results/nchu/morning/summary.json results/nchu/gui/summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nchu-gate-scenarios
+          path: |
+            results/nchu/*/gate.*
+            results/nchu/*/summary.json
+            results/nchu/*/statistics.xml
       - uses: actions/upload-artifact@v4
         with:
           name: synthetic-demo-traces

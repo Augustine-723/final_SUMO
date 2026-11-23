@@ -25,3 +25,5 @@
 [臺中市各行政區交通調查資料](https://www.traffic.taichung.gov.tw/form/index.asp?Parser=3,8,485,358,383,484,,289,,,1,,,,,h,0) · [臺中市偵測器位置](https://data.gov.tw/dataset/84657) · [臺中市 VD 動態資訊](https://data.gov.tw/dataset/119912)
 
 Phase 1 的合成路口用於環境驗證。正式路口的 Phase 2 已完成定位，Phase 3 待取得本地觀測後才能產生實測需求。前期臺北 EI035 的原表、情境倍率、200 秒週期與實驗輸入僅保留在原案例中。[EI035 歷史紀錄](ei035_sources.md)
+
+後續已比對 VD 清單並建置正式路口的模擬場景；最新資料覆蓋與驗收見 [Phase 3／4 執行報告](nchu_simulation.md)。
