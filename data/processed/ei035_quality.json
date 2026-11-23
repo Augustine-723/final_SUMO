@@ -1,0 +1,30 @@
+{
+  "station": "EI035",
+  "survey_date": "2025-06-12",
+  "source_sha256": "63fab4461e18d463628dbcdfe7e5f80bed93187826652ad87995c49feeae0cb0",
+  "approach_intervals": 64,
+  "cell_status": {
+    "zero": 307,
+    "positive": 573,
+    "blank": 2512
+  },
+  "official_hourly_checks": 160,
+  "observed_counts": {
+    "am": {
+      "ordinary": 17261,
+      "two_stage": 1039,
+      "bicycle": 247
+    },
+    "pm": {
+      "ordinary": 18870,
+      "two_stage": 971,
+      "bicycle": 585
+    }
+  },
+  "scenario_movement_counts_including_two_stage": {
+    "am_observed": 18300,
+    "offpeak_synthetic": 9155,
+    "directional_synthetic": 20826,
+    "pm_observed": 19841
+  }
+}
