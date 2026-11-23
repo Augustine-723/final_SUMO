@@ -1,0 +1,43 @@
+name: NCHU frozen-policy evaluation
+on:
+  workflow_dispatch:
+  push:
+    paths: ['configs/phase7.json', 'scripts/nchu_test_policies.py', '.github/workflows/final.yml']
+permissions:
+  contents: read
+  actions: read
+env:
+  SUMO_HOME: /usr/share/sumo
+jobs:
+  evaluate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [offpeak, balanced, directional, reversal, ped_peak]
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: nchu-phase6-models-and-results
+          path: models
+          run-id: 45134925800
+          github-token: ${{ github.token }}
+      - name: Run paired comparisons
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends sumo
+          pip install 'torch==2.5.1' --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-training.txt
+          python scripts/nchu_test_policies.py models ${{ matrix.scenario }} ${{ matrix.shard }} results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase7-${{ matrix.scenario }}-${{ matrix.shard }}
+          path: results/
+      - name: Record machine-readable results
+        run: cat results/*.csv

@@ -1,0 +1,13 @@
+{
+  "phase6_run": 45134925800,
+  "traffic_seed_first": 701,
+  "traffic_seed_count": 20,
+  "models": [11, 22, 33],
+  "profiles": {
+    "offpeak": {"vehicles": [[18,20,8,20],[22,24,12,24]], "walkers": [4,5]},
+    "balanced": {"vehicles": [[48,48,48,48],[52,52,52,52]], "walkers": [12,16]},
+    "directional": {"vehicles": [[18,90,18,20],[20,96,20,24]], "walkers": [12,16]},
+    "reversal": {"vehicles": [[74,18,18,18],[16,18,82,18]], "walkers": [12,16]},
+    "ped_peak": {"vehicles": [[48,48,48,48],[52,52,52,52]], "walkers": [36,48]}
+  }
+}
