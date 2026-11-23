@@ -1,0 +1,8 @@
+{
+  "episodes": 1000,
+  "paired_cases": 100,
+  "unfinished_vehicles": 152,
+  "unfinished_pedestrians": 0,
+  "collisions": 0,
+  "vehicle_teleports": 18
+}

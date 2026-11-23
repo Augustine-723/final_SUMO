@@ -35,7 +35,7 @@ SUMO-RL 測試每 5 秒送出一次動作，檢查 observation、reward、實際
 1. 已定位[中興大學校門口與 OSM 路網](docs/data_sources.md)。確認各進口可通行車種、時段與號誌時相。
 2. [校門口 Phase 3／4](docs/nchu_simulation.md) 已提供 15 分鐘觀測匯入、三組合成需求、OSM 道路幾何、行穿線與可執行的 SUMO-GUI 場景。本地實測需求、現行時制及校準仍待補。
 3. 已完成 [Phase 5 Gymnasium 環境與 Baseline](docs/phase5.md)，可執行固定時制與排隊感應控制。[Phase 6 訓練與模型重播](docs/phase6.md)使用相同環境，比較 DQN、PPO 及兩項單因素試驗。
-4. 比較離峰、均衡尖峰、方向尖峰和未見需求。配對使用測試種子，記錄等待、排隊、通行量與未完成車次。行人 reward 消融視觀測完整度進行。
+4. [Phase 7 配對評估及 Phase 8 繳交成果](docs/final.md)涵蓋 1,000 次模擬、兩項 PPO 消融、英文報告、簡報與展示影片。
 
 GitHub Actions 的 Phase 1 SUMO smoke test 可重跑上述驗收並保留兩份逐秒 CSV。
 
