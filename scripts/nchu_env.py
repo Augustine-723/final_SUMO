@@ -103,6 +103,7 @@ class GateEnv(gym.Env):
         except BaseException:
             self.close()
             raise
+        self.pedestrian_wait = Counter()
         self.time = self.queue_sum = self.queue_peak = 0
         self.occupied = False
         self.queues = [0] * 4
@@ -126,6 +127,11 @@ class GateEnv(gym.Env):
                 self.conn.trafficlight.setRedYellowGreenState("gate", self.signal.states[self.signal.phase])
             self.conn.simulationStep()
             self.time += 1
+            for person in self.conn.simulation.getDepartedPersonIDList():
+                self.conn.person.subscribe(person, [tc.VAR_SPEED])
+            for person, values in self.conn.person.getAllSubscriptionResults().items():
+                if 0 <= values[tc.VAR_SPEED] < 0.1:
+                    self.pedestrian_wait[person] += 1
             edges = self.conn.edge.getAllSubscriptionResults()
             self.queues = [edges[a + "_in"][tc.LAST_STEP_VEHICLE_HALTING_NUMBER] for a in ARMS]
             self.vehicles = [edges[a + "_in"][tc.LAST_STEP_VEHICLE_NUMBER] for a in ARMS]
@@ -160,7 +166,8 @@ class GateEnv(gym.Env):
                 "unfinished_vehicles": counts["car"] + counts["motorcycle"] - len(vehicles),
                 "unfinished_pedestrians": counts["pedestrian"] - len(walks),
                 "mean_vehicle_wait_s": mean(vehicles, "waitingTime"), "mean_vehicle_trip_s": mean(vehicles, "duration"),
-                "mean_pedestrian_wait_s": mean(walks, "waitingTime"), "mean_total_queue": self.queue_sum / self.time,
+                "mean_pedestrian_wait_s": (sum(self.pedestrian_wait[p.get("id")] for p in trips.findall("personinfo"))
+                                           / len(walks) if walks else None), "mean_total_queue": self.queue_sum / self.time,
                 "max_total_queue": self.queue_peak, "episode_reward": -self.queue_sum,
                 "collisions": int(stats.find("safety").get("collisions")),
                 "vehicle_teleports": int(stats.find("teleports").get("total")),
